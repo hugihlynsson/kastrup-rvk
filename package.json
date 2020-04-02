@@ -1,8 +1,8 @@
 {
-  "name": "kastrup-rvk-web",
+  "name": "kastrup-rvk",
   "description": "A website for Kastrup RVK restaurant",
   "version": "1.0.0",
-  "repository": "git@github.com:hugihlynsson/kastrup-rvk-web.git",
+  "repository": "git@github.com:hugihlynsson/kastrup-rvk.git",
   "author": "hugihlynsson <hugihlynsson@gmail.com>",
   "license": "MIT",
   "scripts": {
