@@ -1,26 +1,25 @@
 import { StatelessComponent } from 'react'
 
 import { colors } from '../constants'
+import { MenuItem as MenuItemType } from '../types'
 
-interface Props {
-  name: string
-  description?: string
-  price: number
-}
-
-const MenuItem: StatelessComponent<Props> = ({ name, description, price }) => (
+const MenuItem: StatelessComponent<MenuItemType> = ({
+  item_title,
+  item_description,
+  item_price,
+}) => (
   <article>
     <header>
-      <h4>{name}</h4>
-      <p className="price">{price}</p>
+      <h4>{item_title}</h4>
+      <p className="price">{item_price}</p>
     </header>
 
-    {description && <p className="description">{description}</p>}
+    {item_description && <p className="description">{item_description}</p>}
 
     <style jsx>{`
       article {
         width: 100%;
-        max-width: 500px;
+        max-width: 400px;
         margin-bottom: 12px;
       }
       header {

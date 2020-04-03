@@ -1,99 +1,73 @@
+import { Fragment } from 'react'
 import { NextPage } from 'next'
 import Head from 'next/head'
+import Prismic from 'prismic-javascript'
 
 import { colors } from '../constants'
+import { MenuItem as MenuItemType, PrismicImage } from '../types'
 import MenuItem from '../components/MenuItem'
 
-const breadMenu = [
-  {
-    name: 'Christiansö síld',
-    description: 'creme fraiche, laukur, eggjarauða',
-    price: 2690,
-  },
-  {
-    name: 'Marineruð síld',
-    description: 'hrár og sultaður laukur, capers, kartöflur, dill',
-    price: 2190,
-  },
-  {
-    name: 'Karrýsíld',
-    description: 'epli, egg & karsi',
-    price: 2190,
-  },
-  {
-    name: 'Egg & rækjur',
-    description: 'karsi & sítrónumæjó',
-    price: 2490,
-  },
-]
+interface HomeData {
+  title: string
+  description: string
+  share_image: PrismicImage
+  opening_hours: string
+  location: string
+  phone: string
+  menu_title: string
+  menu_subtitle: string
+  body: Array<{
+    slice_type: 'menu_section'
+    primary: { menu_section_title: string }
+    items: Array<MenuItemType>
+  }>
+}
 
-const mainMenu = [
-  {
-    name: 'Fiskur dagsins',
-    description: 'ásamt meðlæti',
-    price: 2490,
-  },
-  {
-    name: 'Salat',
-    description: 'með gratineruðum geitaosti á crouton',
-    price: 2890,
-  },
-  {
-    name: 'Christiansö síld',
-    description: 'creme fraiche, laukur, eggjarauða',
-    price: 2690,
-  },
-]
+interface Props {
+  data: HomeData
+}
 
-const desertMenu = [
-  { name: 'Ostur – 3 tegundir', price: 2490 },
-  { name: 'Súkkulaðimús', price: 1200 },
-  { name: 'Vanilluís', price: 1200 },
-]
-
-interface Props {}
-
-const Home: NextPage<Props> = () => (
+const Home: NextPage<Props> = ({ data }) => (
   <main>
     <Head>
-      <title>Kastrup RVK</title>
-      <link rel="icon" href="/favicon.png" />
+      <title>{data.title}</title>
+      <link rel="icon" href="/icon.png" />
+      <link rel="apple-touch-icon" href="/icon-512w.png" />
+      <meta name="description" content={data.description} />
+      <meta property="og:url" content="https://kastrup.is" />
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content={data.title} />
+      <meta property="og:description" content={data.description} />
+      <meta property="og:image" content={data.share_image.url} />
     </Head>
 
     <h1>
       <img alt="Kastrup – smurbrauð &amp; bar" src="/logo.svg" />
     </h1>
 
-    <p className="text">Þri – fös: 12 – 16 Lau: 12 – 18</p>
+    <p className="text">{data.opening_hours}</p>
     <p className="text">
-      Ingólfsstræti | Reykjavík | <a href="tel:+3547771979">777 1979</a>
+      {data.location} | <a href={`tel:+354 ${data.phone}`}>{data.phone}</a>
     </p>
 
-    <h2>Matseðill</h2>
+    <h2>{data.menu_title}</h2>
 
-    <p className="menuDescription">Hringið til að panta take-away</p>
+    <p className="menuDescription">{data.menu_subtitle}</p>
 
-    <h3>Smurbrauð</h3>
-
-    {[...breadMenu, ...breadMenu, ...breadMenu].map((item, index) => (
-      <MenuItem {...item} key={index} />
-    ))}
-
-    <h3>Aðalréttir</h3>
-
-    {mainMenu.map((item) => (
-      <MenuItem {...item} key={item.name} />
-    ))}
-
-    <h3>Eftirréttir</h3>
-
-    {desertMenu.map((item) => (
-      <MenuItem {...item} key={item.name} />
-    ))}
+    {data.body
+      .filter(({ slice_type }) => slice_type === 'menu_section')
+      .map(({ primary, items }) => (
+        <Fragment key={primary.menu_section_title}>
+          <h3>{primary.menu_section_title}</h3>
+          {items.map((item) => (
+            <MenuItem {...item} key={item.item_title} />
+          ))}
+        </Fragment>
+      ))}
 
     <footer>
       <p className="text">
-        Ingólfsstræti | Reykjavík | <a href="tel:+3547771979">777 1979</a>
+        {data.location} | <a href={`tel:+354 ${data.phone}`}>{data.phone}</a>
       </p>
       <p className="text">
         <a href="https://www.facebook.com/kastruprvk/">Facebook</a> |{' '}
@@ -161,7 +135,7 @@ const Home: NextPage<Props> = () => (
         main {
           border-width: 4px;
         }
-        text {
+        .text {
           font-size: 25px;
         }
       }
@@ -189,5 +163,16 @@ const Home: NextPage<Props> = () => (
     `}</style>
   </main>
 )
+
+Home.getInitialProps = async ({ res }) => {
+  if (res) {
+    res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate')
+  }
+
+  const client = Prismic.client('https://kastrup.cdn.prismic.io/api/v2')
+  const homeSingle = await client.getSingle('home', {})
+  console.log('data', homeSingle.data)
+  return { data: homeSingle.data as HomeData }
+}
 
 export default Home
