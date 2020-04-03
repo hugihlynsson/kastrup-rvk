@@ -34,7 +34,7 @@ const Home: NextPage<Props> = ({ data }) => (
       <link rel="icon" href="/icon.png" />
       <link rel="apple-touch-icon" href="/icon-512w.png" />
       <meta name="description" content={data.description} />
-      <meta property="og:url" content="https://kastrup.is" />
+      <meta property="og:url" content="https://kastrup.now.sh" />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={data.title} />
       <meta property="og:description" content={data.description} />
