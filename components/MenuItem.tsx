@@ -20,7 +20,6 @@ const MenuItem: StatelessComponent<MenuItemType> = ({
     <style jsx>{`
       article {
         width: 100%;
-        max-width: 400px;
         margin-bottom: 12px;
       }
       header {
