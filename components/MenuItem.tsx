@@ -2,6 +2,7 @@ import { StatelessComponent } from 'react'
 
 import { colors } from '../constants'
 import { MenuItem as MenuItemType } from '../types'
+import addDecimalSeparators from '../modules/addDecimalSeparators'
 
 const MenuItem: StatelessComponent<MenuItemType> = ({
   item_title,
@@ -11,7 +12,7 @@ const MenuItem: StatelessComponent<MenuItemType> = ({
   <article>
     <header>
       <h4>{item_title}</h4>
-      <p className="price">{item_price}</p>
+      <p className="price">{addDecimalSeparators(item_price)}</p>
     </header>
 
     {item_description && <p className="description">{item_description}</p>}
