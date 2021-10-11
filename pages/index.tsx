@@ -42,10 +42,22 @@ const Home: NextPage<Props> = ({ data }) => (
     </Head>
 
     <h1>
-      <img alt="Kastrup – smurbrauð &amp; bar" src="/logo.svg" />
+      <img
+        className="logo"
+        alt="Kastrup – smurbrauð &amp; bar"
+        src="/logo.svg"
+      />
     </h1>
 
     <p className="text">{data.opening_hours}</p>
+
+    <div className="images">
+      <img className="image" src="/kastrup1.jpg" alt="" />
+      <img className="image" src="/kastrup2.jpg" alt="" />
+      <img className="image" src="/kastrup3.jpg" alt="" />
+      <img className="image" src="/kastrup4.jpg" alt="" />
+    </div>
+
     <p className="text">
       {data.location} | <a href={`tel:+354 ${data.phone}`}>{data.phone}</a>
     </p>
@@ -54,16 +66,18 @@ const Home: NextPage<Props> = ({ data }) => (
 
     <p className="menuDescription">{data.menu_subtitle}</p>
 
-    {data.body
-      .filter(({ slice_type }) => slice_type === 'menu_section')
-      .map(({ primary, items }) => (
-        <Fragment key={primary.menu_section_title}>
-          <h3>{primary.menu_section_title}</h3>
-          {items.map((item) => (
-            <MenuItem {...item} key={item.item_title} />
-          ))}
-        </Fragment>
-      ))}
+    <div className="menu">
+      {data.body
+        .filter(({ slice_type }) => slice_type === 'menu_section')
+        .map(({ primary, items }) => (
+          <Fragment key={primary.menu_section_title}>
+            <h3>{primary.menu_section_title}</h3>
+            {items.map((item) => (
+              <MenuItem {...item} key={item.item_title} />
+            ))}
+          </Fragment>
+        ))}
+    </div>
 
     <footer>
       <p className="text">
@@ -82,22 +96,39 @@ const Home: NextPage<Props> = ({ data }) => (
         align-items: center;
         margin: 20px;
         border: 3px solid ${colors.blue};
-        padding: 16px;
       }
 
       h1 {
         width: 100%;
         max-width: 514px;
+        margin: 60px 0 40px;
       }
 
-      img {
+      .logo {
         width: 100%;
+        height: 100%;
+      }
+
+      .images {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+      }
+      .image {
+        float: left;
+        width: 50%;
+        height: auto;
+        outline: 3px solid ${colors.blue};
       }
 
       .text {
         font-size: 18px;
         margin-top: 0;
         margin-bottom: 10px;
+        margin-left: 16px;
+        margin-right: 16px;
       }
 
       h2 {
@@ -105,12 +136,24 @@ const Home: NextPage<Props> = ({ data }) => (
         line-height: 1;
         margin-bottom: 0;
         font-weight: 400;
+        margin-left: 16px;
+        margin-right: 16px;
       }
 
       .menuDescription {
         font-size: 18px;
         color: ${colors.gray};
         margin-top: 0;
+        margin-bottom: 20px;
+        margin-left: 16px;
+        margin-right: 16px;
+      }
+
+      .menu {
+        padding-left: 16px;
+        padding-right: 16px;
+        width: 100%;
+        max-width: 400px;
         margin-bottom: 20px;
       }
 
@@ -122,9 +165,17 @@ const Home: NextPage<Props> = ({ data }) => (
       }
 
       footer {
+        display: flex;
+        width: 100%;
         margin-top: 40px;
         margin-bottom: 20px;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 30px;
         text-align: center;
+        border-top: 3px solid ${colors.blue};
+        padding-left: 16px;
+        padding-right: 16px;
       }
 
       a {
@@ -137,6 +188,14 @@ const Home: NextPage<Props> = ({ data }) => (
         }
         .text {
           font-size: 25px;
+        }
+        .image {
+          width: 25%;
+          outline-width: 4px;
+        }
+        footer {
+          padding-top: 60px;
+          margin-bottom: 50px;
         }
       }
     `}</style>
